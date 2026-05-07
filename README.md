@@ -121,6 +121,15 @@ ShieldScan é **Open Source** e gratuito para uso pessoal e comercial. Sinta-se 
 - Reportar bugs
 - Sugerir melhorias
 
+## Documentação 📚
+
+**[Wiki Completa](https://github.com/Fehcorrea1/shieldscan-docs)**
+
+- [Getting Started](https://github.com/Fehcorrea1/shieldscan-docs/blob/main/Getting-Started.md)
+- [Installation](https://github.com/Fehcorrea1/shieldscan-docs/blob/main/Installation.md)
+- [Usage](https://github.com/Fehcorrea1/shieldscan-docs/blob/main/Usage.md)
+- [FAQ](https://github.com/Fehcorrea1/shieldscan-docs/blob/main/FAQ.md)
+
 ## Contributing 🤝
 
 Contributions are welcome! Please check the issues page or submit a Pull Request.
