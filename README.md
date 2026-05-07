@@ -13,6 +13,8 @@
 ![Go Version](https://img.shields.io/badge/Go-1.20+-00ADD8?style=flat&logo=go)
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Status](https://img.shields.io/badge/Status-MVP-green)
+[![CI](https://github.com/Fehcorrea1/shieldscan/actions/workflows/ci.yml/badge.svg)](https://github.com/Fehcorrea1/shieldscan/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/github/actions/workflow/status/Fehcorrea1/shieldscan/ci.yml?label=tests)](https://github.com/Fehcorrea1/shieldscan/actions)
 
 ShieldScan is a **high-performance, open-source** Static Application Security Testing (SAST) tool designed to detect vulnerabilities and hardcoded secrets in modern applications, with a special focus on identifying AI-generated code hallucinations. 
 
