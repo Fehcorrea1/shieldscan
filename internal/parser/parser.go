@@ -42,6 +42,14 @@ func New() *Parser {
 	}
 }
 
+func (p *Parser) isLocalImport(pkg string) bool {
+	pkg = strings.TrimSpace(pkg)
+	return strings.HasPrefix(pkg, "./") ||
+		strings.HasPrefix(pkg, "../") ||
+		strings.HasPrefix(pkg, ".") ||
+		strings.HasPrefix(pkg, "/")
+}
+
 func (p *Parser) DiscoverFiles(path string) ([]string, error) {
 	var files []string
 
@@ -134,24 +142,28 @@ func (p *Parser) parseJS(filePath string) ([]ast.Node, error) {
 			parts := strings.Split(line, " from ")
 			if len(parts) == 2 {
 				pkg := strings.Trim(parts[1], "';\"")
-				nodes = append(nodes, &ast.BasicNode{
-					Type:   "import_statement",
-					Text:   pkg,
-					Line:   i + 1,
-					Column: 0,
-				})
+				if !p.isLocalImport(pkg) {
+					nodes = append(nodes, &ast.BasicNode{
+						Type:   "import_statement",
+						Text:   pkg,
+						Line:   i + 1,
+						Column: 0,
+					})
+				}
 			}
 		} else if strings.Contains(line, "require(") {
 			start := strings.Index(line, "require(") + 8
 			end := strings.Index(line[start:], ")")
 			if end != -1 {
 				pkg := strings.Trim(line[start:start+end], "';\"")
-				nodes = append(nodes, &ast.BasicNode{
-					Type:   "import_statement",
-					Text:   pkg,
-					Line:   i + 1,
-					Column: 0,
-				})
+				if !p.isLocalImport(pkg) {
+					nodes = append(nodes, &ast.BasicNode{
+						Type:   "import_statement",
+						Text:   pkg,
+						Line:   i + 1,
+						Column: 0,
+					})
+				}
 			}
 		}
 	}
@@ -187,7 +199,7 @@ func (p *Parser) parsePython(filePath string) ([]ast.Node, error) {
 				} else if len(parts) >= 3 && parts[1] != "import" {
 					packageName = parts[1]
 				}
-				if packageName != "" {
+				if packageName != "" && !p.isLocalImport(packageName) {
 					nodes = append(nodes, &ast.BasicNode{
 						Type:   "import_statement",
 						Text:   packageName,
@@ -224,12 +236,14 @@ func (p *Parser) parseGo(filePath string) ([]ast.Node, error) {
 		if strings.HasPrefix(line, "import ") && !strings.Contains(line, "import (") {
 			pkg := strings.TrimSpace(strings.TrimPrefix(line, "import "))
 			pkg = strings.Trim(pkg, "\";`")
-			nodes = append(nodes, &ast.BasicNode{
-				Type:   "import_statement",
-				Text:   pkg,
-				Line:   i + 1,
-				Column: 0,
-			})
+			if !p.isLocalImport(pkg) {
+				nodes = append(nodes, &ast.BasicNode{
+					Type:   "import_statement",
+					Text:   pkg,
+					Line:   i + 1,
+					Column: 0,
+				})
+			}
 		}
 	}
 

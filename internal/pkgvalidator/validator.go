@@ -120,7 +120,12 @@ func (v *Validator) validateOne(pkg PackageInfo) *report.Finding {
 }
 
 func (v *Validator) validateNPM(packageName string) (bool, error) {
-	url := fmt.Sprintf("https://registry.npmjs.org/%s", packageName)
+	rootPackage := packageName
+	if strings.Contains(packageName, "/") {
+		rootPackage = strings.Split(packageName, "/")[0]
+	}
+
+	url := fmt.Sprintf("https://registry.npmjs.org/%s", rootPackage)
 	resp, err := v.httpClient.Get(url)
 	if err != nil {
 		return false, err

@@ -47,6 +47,10 @@ func (d *Detector) Scan(filePath string) []report.Finding {
 			continue
 		}
 
+		if d.isFalsePositive(line) {
+			continue
+		}
+
 		if d.matchesPattern(line) && len(line) >= d.minLength {
 			entropy := calculateEntropy(line)
 			if entropy > d.minEntropy {
@@ -67,6 +71,47 @@ func (d *Detector) Scan(filePath string) []report.Finding {
 	}
 
 	return findings
+}
+
+func (d *Detector) isFalsePositive(line string) bool {
+	if strings.Contains(line, "confirmPassword") || strings.Contains(line, "setConfirmPassword") {
+		return true
+	}
+	if strings.Contains(line, "setPassword") {
+		return true
+	}
+	if strings.Contains(line, "newPassword") {
+		return true
+	}
+	if strings.Contains(line, "currentPassword") {
+		return true
+	}
+
+	if strings.Contains(line, "res.status") {
+		return true
+	}
+	if strings.Contains(line, "res.json") {
+		return true
+	}
+	if strings.Contains(line, "return") && strings.Contains(line, "token") {
+		return true
+	}
+
+	if strings.Contains(line, "type=\"password\"") {
+		return true
+	}
+
+	if strings.Contains(line, "password") && strings.Contains(line, "=>") {
+		return true
+	}
+	if strings.Contains(line, "password") && strings.Contains(line, "onChange") {
+		return true
+	}
+	if strings.Contains(line, "password") && strings.Contains(line, "useState") {
+		return true
+	}
+
+	return false
 }
 
 func (d *Detector) matchesPattern(line string) bool {
